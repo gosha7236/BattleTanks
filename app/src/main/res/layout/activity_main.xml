@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/container">
 
     <ImageView
         android:id="@+id/myTank"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/tan"/>
+        app:srcCompat="@drawable/tank"/>
 
 </FrameLayout>
