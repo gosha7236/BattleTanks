@@ -34,7 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.title = "Menu"
     }
-
+private fun switchEditMode()
+{
+    if (editMode)
+    {
+        gridDrawer.removeGrid()
+    }
+    else
+    {
+        gridDrawer.drawGrid()
+    }
+    editMode = !editMode
+}
     override  fun onCreateOptionsMenu(menu: Menu?): Boolean{
         menuInflater.inflate(R.menu.settings,menu)
         return true
@@ -43,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.menu_settings -> {
-                gridDrawer.drawGrid()
+                switchEditMode()
                 return true
             }
 

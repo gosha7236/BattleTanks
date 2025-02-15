@@ -9,14 +9,12 @@ import kotlin.reflect.KDeclarationContainer
 
 class GridDrawer(private val context: Context) {
 private val alllines = mutableListOf<View>()
-   /* fun removeGrid()
+   fun removeGrid()
     {
         val container = binding.container
-        allines.forEach
-        {
-            //container.removeView(it)
-        }
-    }*/
+        alllines.forEach {
+            container.removeView(it)  }
+    }
     fun drawGrid() {
         val container = binding.container
         drawHorizontalLines(container)
