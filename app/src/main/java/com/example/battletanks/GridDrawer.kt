@@ -8,7 +8,15 @@ import kotlin.reflect.KDeclarationContainer
 
 
 class GridDrawer(private val context: Context) {
-
+private val alllines = mutableListOf<View>()
+   /* fun removeGrid()
+    {
+        val container = binding.container
+        allines.forEach
+        {
+            //container.removeView(it)
+        }
+    }*/
     fun drawGrid() {
         val container = binding.container
         drawHorizontalLines(container)
@@ -24,6 +32,7 @@ class GridDrawer(private val context: Context) {
             layoutParams.topMargin = topMargin
             horizontalLine.layoutParams = layoutParams
             horizontalLine.setBackgroundColor(Color.WHITE)
+            alllines.add(horizontalLine)
             container.addView(horizontalLine)
         }
     }
@@ -37,6 +46,7 @@ class GridDrawer(private val context: Context) {
             layoutParams.leftMargin = leftMargin
             verticalLine.layoutParams = layoutParams
             verticalLine.setBackgroundColor(Color.WHITE)
+            alllines.add(verticalLine)
             container.addView(verticalLine)
         }
     }
