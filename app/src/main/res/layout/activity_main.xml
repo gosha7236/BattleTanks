@@ -10,6 +10,6 @@
         android:id="@+id/myTank"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/tank"/>
+        app:srcCompat="@drawable/tan"/>
 
 </FrameLayout>
