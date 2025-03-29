@@ -4,16 +4,19 @@ import android.graphics.Color
 import android.view.View
 import android.widget.FrameLayout
 import com.example.battletanks.CELL_SIZE
+import com.example.battletanks.binding
 
 
 class GridDrawer(private val container: FrameLayout?) {
     private val allLines = mutableListOf<View>()
     fun removeGrid() {
+
         allLines.forEach {
             container?.removeView(it)
         }
     }
     fun drawGrid() {
+
         drawHorizontalLines()
         drawVerticalLines()
     }
