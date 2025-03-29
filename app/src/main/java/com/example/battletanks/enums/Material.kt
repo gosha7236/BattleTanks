@@ -5,30 +5,32 @@ import com.example.battletanks.R
 const val CELLS_SIMPLE_ELEMENT = 1
 const val CELLS_EAGLE_WIDTH = 4
 const val CELLS_EAGLE_HEIGHT = 3
+const val CELLS_TANKS_SIZE = 2
 enum class Material (
     val tankConGoThrough: Boolean,
     val bulletCanGoThrough: Boolean,
     val simpleBulletCanDestroy: Boolean,
-    val canExistOnLyOne: Boolean,
+    val elementsAmountONScreen: Int,
     val width: Int,
     val height: Int,
-    val image: Int
+    val image: Int?
     ) {
     EMPTY(
         true,
         true,
         true,
-        false,
         0,
         0,
-        0
+        0,
+        null
+
     ),
 
     BRICK(
         false,
         false,
         true,
-        false,
+        0,
         CELLS_SIMPLE_ELEMENT,
         CELLS_SIMPLE_ELEMENT,
         R.drawable.brick
@@ -37,7 +39,7 @@ enum class Material (
         false,
         false,
         false,
-        false,
+        0,
         CELLS_SIMPLE_ELEMENT,
         CELLS_SIMPLE_ELEMENT,
         R.drawable.concrete
@@ -46,7 +48,7 @@ enum class Material (
         true,
         true,
         false,
-        false,
+        0,
         CELLS_SIMPLE_ELEMENT,
         CELLS_SIMPLE_ELEMENT,
         R.drawable.grass
@@ -55,9 +57,27 @@ enum class Material (
         false,
         false,
         true,
-        true,
+        1,
         CELLS_EAGLE_WIDTH,
         CELLS_EAGLE_HEIGHT,
         R.drawable.eagle
+    ),
+    ENEMY_TANK(
+        false,
+        false,
+        true,
+        0,
+        CELLS_TANKS_SIZE,
+        CELLS_TANKS_SIZE,
+        R.drawable.enemy_tank
+    ),
+    PLAYER_TANK(
+        false,
+        false,
+        true,
+        1,
+        CELLS_TANKS_SIZE,
+        CELLS_TANKS_SIZE,
+        R.drawable.tank
     )
 }

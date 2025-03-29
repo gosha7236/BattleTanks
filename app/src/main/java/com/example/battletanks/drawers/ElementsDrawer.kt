@@ -2,14 +2,11 @@ package com.example.battletanks.drawers
 
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.RemoteViews.RemoteViewOutlineProvider
-import androidx.annotation.DrawableRes
-import com.example.battletanks.CELL_SIZE
-import com.example.battletanks.R
+import com.example.battletanks.activities.CELL_SIZE
 import com.example.battletanks.enums.Material
 import com.example.battletanks.models.Coordinate
 import com.example.battletanks.models.Element
+import com.example.battletanks.utils.kt.drawElement
 import com.example.battletanks.utils.kt.getElementByCoordinates
 
 class ElementsDrawer(val container:FrameLayout) {
@@ -32,7 +29,7 @@ class ElementsDrawer(val container:FrameLayout) {
     {
      val viewOnCoordinate = getElementByCoordinates(coordinate, elementsOnContainer)
         if (viewOnCoordinate == null){
-            drawView(coordinate)
+            createElementDrawView(coordinate)
             return
         }
         if (viewOnCoordinate.material != currentMaterial){
@@ -48,48 +45,68 @@ fun drawElementsList(elements: List<Element>?)
     for (element in elements)
     {
         currentMaterial = element.material
-        drawView((element.coordinate))
+        drawElement(element)
     }
+    currentMaterial = Material.EMPTY
 }
     private fun replaceView(coordinate: Coordinate)
     {
         eraseView(coordinate)
-        drawView(coordinate)
+        createElementDrawView(coordinate)
     }
     private fun eraseView(coordinate: Coordinate)
     {
-        val elementOnCoordinate = getElementByCoordinates(coordinate, elementsOnContainer)
-        if (elementOnCoordinate != null) {
-            val erasingView = container.findViewById<View>(elementOnCoordinate.viewId)
+        removeElement(getElementByCoordinates(coordinate, elementsOnContainer))
+        for (element in getElementsUnderCurrentCoordinate(coordinate)) {
+            removeElement(element)
+        }
+    }
+    private fun removeElement(element: Element?)
+    {
+        if (element != null)
+        {
+            val erasingView = container.findViewById<View>(element.viewId)
             container.removeView(erasingView)
-            elementsOnContainer.remove(elementOnCoordinate)
+            elementsOnContainer.remove(element)
         }
     }
-
-    private fun removeExistingEagle(){
-        elementsOnContainer.firstOrNull{it.material == Material.EAGLE}?.coordinate?.let{
-            eraseView(it)
+    private fun getElementsUnderCurrentCoordinate(coordinate: Coordinate): List<Element> {
+        val elements = mutableListOf<Element>()
+        for (element in elementsOnContainer) {
+            for (height in 0 until currentMaterial.height) {
+                for (width in 0 until currentMaterial.width) {
+                    if (element.coordinate == Coordinate(
+                            coordinate.top + height * CELL_SIZE,
+                            coordinate.left + width * CELL_SIZE
+                        )
+                    ) {
+                        elements.add(element)
+                    }
+                }
+            }
+        }
+        return elements
+    }
+    private fun removeUnwantedInstances() {
+        if (currentMaterial.elementsAmountONScreen !=0) {
+           val erasingElements = elementsOnContainer.filter { it.material == currentMaterial }
+            if (erasingElements.size >= currentMaterial.elementsAmountONScreen)
+            {
+                eraseView(erasingElements[0].coordinate)
+            }
         }
     }
-    private fun drawView(coordinate: Coordinate){
-        removeExistingEagle()
-        val view = ImageView(container.context)
-        val layoutParams = FrameLayout.LayoutParams(
-            currentMaterial.width * CELL_SIZE,
-            currentMaterial.height * CELL_SIZE
-        )
-        view.setImageResource(currentMaterial.image)
-        layoutParams.topMargin = coordinate.top
-        layoutParams.leftMargin = coordinate.left
+    private fun drawElement(element: Element)
+    {
+        removeUnwantedInstances()
+        element.drawElement(container)
+        elementsOnContainer.add(element)
+    }
+    private fun createElementDrawView(coordinate: Coordinate) {
         val element = Element(
-                material = currentMaterial,
-                coordinate = coordinate,
-                width = currentMaterial.width,
-                height = currentMaterial.height
-            )
-                view.id = element.viewId
-                view.layoutParams = layoutParams
-                container.addView(view)
-                elementsOnContainer.add(element)
+            material = currentMaterial,
+            coordinate = coordinate,
+        )
+        drawElement(element)
     }
 }
