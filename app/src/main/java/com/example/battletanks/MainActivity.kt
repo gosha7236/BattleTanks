@@ -18,6 +18,7 @@ import com.example.battletanks.drawers.ElementsDrawer
 import com.example.battletanks.drawers.GridDrawer
 import com.example.battletanks.enums.Material
 import com.example.battletanks.drawers.TankDrawer
+import com.example.battletanks.utils.kt.LevelStorage
 
 const val CELL_SIZE = 50
 
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val bulletDrawer by lazy {
         BulletDrawer(binding.container)
     }
+    private val levelStorage by lazy { LevelStorage(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,14 +51,18 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Menu"
         binding.editorClear.setOnClickListener {elementsDrawer.currentMaterial = Material.EMPTY}
         binding.editorBrick.setOnClickListener {elementsDrawer.currentMaterial = Material.BRICK}
-        binding.editorConcrete.setOnClickListener {elementsDrawer.currentMaterial = Material.CONCRETE}
+        binding.editorConcrete.setOnClickListener {
+            elementsDrawer.currentMaterial = Material.CONCRETE
+        }
         binding.editorGrass.setOnClickListener {elementsDrawer.currentMaterial = Material.GRASS}
+        binding.editorEagle.setOnClickListener {elementsDrawer.currentMaterial = Material.EAGLE}
         binding.container.setOnTouchListener { _, event ->
             elementsDrawer.onTouchContainer(event.x,event.y)
         return@setOnTouchListener true
         }
-
+        elementsDrawer.drawElementsList(levelStorage.loadLevel())
     }
+
 private fun switchEditMode()
 {
     if (editMode)
@@ -75,14 +81,16 @@ private fun switchEditMode()
         menuInflater.inflate(R.menu.settings,menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.menu_settings -> {
                 switchEditMode()
                 return true
             }
-
+            R.id.menu_save -> {
+             levelStorage.saveLevel(elementsDrawer.elementsOnContainer)
+           return true
+             }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -111,7 +119,8 @@ private fun switchEditMode()
             )
             KEYCODE_SPACE -> bulletDrawer.makeBulletMove(
                 binding.myTank,
-                tankDrawer.currentDirection
+                tankDrawer.currentDirection,
+                elementsDrawer.elementsOnContainer
             )
         }
         return super.onKeyDown(keyCode, event)
